@@ -34,17 +34,17 @@ Caso, ao final, existam mais de um projeto que conseguiram carregar os mesmos ar
 
 3. **Acessibilidade**: Sua aplicação deverá ser o mais acessível que você puder (ideal que esteja completamente acessível). Deve ser possível navegar na sua _tree view_ de maneira acessível.
 
-De acordo com esses três itens acima, iremos realizar os desempates até que consigamos as 10 primeiras colocações. Para todas as outras colocações não iremos realizar desempates.  
+De acordo com esses três itens acima, iremos realizar os desempates até que consigamos as 10 primeiras colocações. Para todas as outras colocações não iremos realizar desempates.
 
 ### Análise
 
 Para as análises utilizaremos:
 
-- Performance: Time to Next Interaction (basicamente a velocidade da sua aplicação)
-- Core Web Vitals
-- Lighthouse Results
-- Accessibility Checks
-- Outras métricas a serem consideradas futuramente pela organização
+-  Performance: Time to Next Interaction (basicamente a velocidade da sua aplicação)
+-  Core Web Vitals
+-  Lighthouse Results
+-  Accessibility Checks
+-  Outras métricas a serem consideradas futuramente pela organização
 
 ### Casos Não Previstos
 
@@ -62,15 +62,15 @@ Além disso, sua aplicação deve ser original e não pode ser uma cópia de out
 
 Sua aplicação deve ser capaz de rodar o máximo possível de arquivos de teste na pasta disponibilizada, carregando 1 por vez. Os arquivos disponíveis são:
 
-- alltypes.json
-- verysmall.json
-- small.json
-- pokedex.json
-- startwitharray.json
-- large.json
-- giant.json
-- invalid.json
-- nullreference.json
+-  alltypes.json
+-  verysmall.json
+-  small.json
+-  pokedex.json
+-  startwitharray.json
+-  large.json
+-  giant.json
+-  invalid.json
+-  nullreference.json
 
 ## Submeter seu projeto
 
