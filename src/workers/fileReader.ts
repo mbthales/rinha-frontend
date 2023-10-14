@@ -9,7 +9,7 @@ const isJson = (item: string) => {
 
 onmessage = (msg) => {
 	const file = msg.data
-	const chunkSize = 45000
+	const chunkSize = 4500000
 	let offset = 0
 	let data = ''
 
@@ -25,6 +25,7 @@ onmessage = (msg) => {
 			readNextChunk()
 		} else {
 			const jsonIsValid = isJson(data)
+			console.log(jsonIsValid)
 
 			if (jsonIsValid) {
 				postMessage(jsonIsValid)

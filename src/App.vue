@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import JsonRenderer from './components/JsonRenderer.vue'
-
 import { ref, onMounted } from 'vue'
+
+import JsonRenderer from './components/JsonRenderer.vue'
 
 const worker = new Worker(new URL('./workers/fileReader.ts', import.meta.url), {
 	type: 'module',
 })
 
 const fileError = ref<String | null>(null)
-const jsonData = ref<Array<Object> | null>(null)
+const jsonData = ref<Array<Object> | Object | null>(null)
 const jsonName = ref('')
 const loading = ref(false)
-const dataLoaded = ref(100)
+const dataLoaded = ref(5)
 
 const handleFile = (e: Event) => {
 	const target = e.target as HTMLInputElement
@@ -39,7 +39,7 @@ const loadMoreData = () => {
 	const documentHeight = document.documentElement.scrollHeight
 
 	if (scrollY + windowHeight >= documentHeight - 200) {
-		dataLoaded.value += 50
+		dataLoaded.value += 5
 	}
 }
 
@@ -67,7 +67,9 @@ worker.onmessage = (msg) => {
 	</div>
 	<div v-else>
 		<JsonRenderer
-			:json="jsonData"
+			:json="
+				Array.isArray(jsonData) ? jsonData.slice(0, dataLoaded) : jsonData
+			"
 			:jsonName="jsonName"
 			:dataLoaded="dataLoaded"
 		/>
