@@ -1,10 +1,17 @@
 <script setup lang="ts">
 import JsonRenderer from './components/JsonRenderer.vue'
-import { ref } from 'vue'
+
+import { ref, onMounted } from 'vue'
+
+const worker = new Worker(new URL('./workers/fileReader.ts', import.meta.url), {
+	type: 'module',
+})
 
 const fileError = ref<String | null>(null)
+const jsonData = ref<Array<Object> | null>(null)
 const jsonName = ref('')
-const jsonData = ref<Object | null>(null)
+const loading = ref(false)
+const dataLoaded = ref(100)
 
 const handleFile = (e: Event) => {
 	const target = e.target as HTMLInputElement
@@ -21,19 +28,32 @@ const handleFile = (e: Event) => {
 
 		jsonName.value = file.name
 
-		readJsonFile(file)
+		loading.value = true
+		worker.postMessage(file)
 	}
 }
 
-const readJsonFile = (file: File) => {
-	const reader = new FileReader()
+const loadMoreData = () => {
+	const scrollY = window.scrollY
+	const windowHeight = window.innerHeight
+	const documentHeight = document.documentElement.scrollHeight
 
-	reader.onload = (evt: ProgressEvent<FileReader>) => {
-		const readerResult = evt.target?.result as string
-		jsonData.value = JSON.parse(readerResult)
+	if (scrollY + windowHeight >= documentHeight - 200) {
+		dataLoaded.value += 50
 	}
+}
 
-	reader.readAsText(file)
+onMounted(() => {
+	window.addEventListener('scroll', loadMoreData)
+})
+
+worker.onmessage = (msg) => {
+	if (msg.data === 'error') {
+		fileError.value = 'Invalid file. Please load a JSON file.'
+	} else {
+		jsonData.value = msg.data
+	}
+	loading.value = false
 }
 </script>
 
@@ -43,8 +63,13 @@ const readJsonFile = (file: File) => {
 		<p>Simple JSON Viewer that runs completely on-client. No data exchange</p>
 		<input type="file" @change="handleFile" />
 		<p v-if="fileError">{{ fileError }}</p>
+		<p v-if="loading">Loading...</p>
 	</div>
 	<div v-else>
-		<JsonRenderer :json="jsonData" :jsonName="jsonName" />
+		<JsonRenderer
+			:json="jsonData"
+			:jsonName="jsonName"
+			:dataLoaded="dataLoaded"
+		/>
 	</div>
 </template>

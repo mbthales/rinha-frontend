@@ -1,12 +1,20 @@
 <script setup lang="ts">
-defineProps({ json: Object, jsonName: String })
+defineProps({
+	json: Object,
+	jsonName: String,
+	dataLoaded: Number,
+})
 </script>
 
 <template>
 	<div class="ml-4">
 		<h1 class="text-6xl mb-2" v-if="jsonName">{{ jsonName }}</h1>
 		<ul class="font-semibold font-inter ml-6">
-			<li v-for="(value, key) in json">
+			<li
+				v-for="(value, key) in Object.fromEntries(
+					Object.entries(json).slice(0, dataLoaded)
+				)"
+			>
 				<span
 					:class="{
 							'text-[#4E9590]': isNaN((key as unknown) as number),
