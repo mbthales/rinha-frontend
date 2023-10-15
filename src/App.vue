@@ -11,7 +11,7 @@ const fileError = ref<String | null>(null)
 const jsonData = ref<Array<Object> | Object | null>(null)
 const jsonName = ref('')
 const loading = ref(false)
-const dataLoaded = ref(5)
+const dataLoaded = ref(3)
 
 const handleFile = (e: Event) => {
 	const target = e.target as HTMLInputElement
@@ -60,35 +60,45 @@ worker.onmessage = (msg) => {
 </script>
 
 <template>
-	<div v-if="!jsonData" class="flex justify-center items-center w-full h-full">
-		<div class="text-center">
-			<h1 class="text-5xl font-bold">JSON Tree Viewer</h1>
-			<p class="font-normal my-6 text-2xl">
-				Simple JSON Viewer that runs completely on-client. No data exchange
-			</p>
-			<input
-				type="file"
-				id="files"
-				class="invisible absolute"
-				@change="handleFile"
-			/>
-			<label
-				for="files"
-				class="cursor-pointer rounded border-[1px] w-[130px] gap-[10px] gradient-button opacity-[70%] block mx-auto text-base py-[6px] px-[12px] font-medium hover:opacity-[60%]"
-				>Load JSON</label
-			>
-			<p v-if="fileError" class="text-red mt-6">{{ fileError }}</p>
-			<p v-if="loading" class="mt-6">Loading...</p>
+	<main>
+		<div
+			id="teste"
+			v-if="!jsonData"
+			class="flex justify-center items-center w-full h-full"
+			tabindex="1"
+		>
+			<div class="text-center" tabindex="1">
+				<h1 class="text-5xl font-bold" tabindex="1">JSON Tree Viewer</h1>
+				<p class="font-normal my-6 text-2xl" tabindex="1">
+					Simple JSON Viewer that runs completely on-client. No data
+					exchange
+				</p>
+				<input
+					type="file"
+					id="files"
+					class="invisible absolute"
+					@change="handleFile"
+				/>
+				<label
+					for="files"
+					class="cursor-pointer rounded border-[1px] w-[130px] gap-[10px] gradient-button opacity-[70%] block mx-auto text-base py-[6px] px-[12px] font-medium hover:opacity-[60%]"
+					tabindex="1"
+					>Load JSON</label
+				>
+				<p v-if="fileError" class="text-red mt-6">{{ fileError }}</p>
+				<p v-if="loading" class="mt-6">Loading...</p>
+			</div>
 		</div>
-	</div>
-	<div v-else>
-		<JsonRenderer
-			:data="
-				jsonData instanceof Array ? jsonData.slice(0, dataLoaded) : jsonData
-			"
-			:jsonName="jsonName"
-			:dataLoaded="dataLoaded"
-			class="mx-auto w-[638px]"
-		/>
-	</div>
+		<div v-else class="bg-white mx-auto w-[638px]">
+			<JsonRenderer
+				:data="
+					jsonData instanceof Array
+						? jsonData.slice(0, dataLoaded)
+						: jsonData
+				"
+				:jsonName="jsonName"
+				:dataLoaded="dataLoaded"
+			/>
+		</div>
+	</main>
 </template>

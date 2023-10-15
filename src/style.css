@@ -6,10 +6,9 @@
 
 html,
 body,
-#app {
-	width: 100vw;
-	height: 100vh;
-	font-family: 'Inter', sans-serif;
+#app,
+main {
+	@apply w-full h-full font-inter bg-white text-black;
 }
 
 .gradient-button {

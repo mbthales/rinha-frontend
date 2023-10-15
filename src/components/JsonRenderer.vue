@@ -10,7 +10,11 @@ defineProps({
 
 <template>
 	<div>
-		<h1 class="text-[32px] mb-[10px] mt-6 font-bold" v-if="jsonName">
+		<h1
+			class="text-[32px] mb-[10px] mt-6 font-bold"
+			v-if="jsonName"
+			tabindex="1"
+		>
 			{{ jsonName }}
 		</h1>
 		<ul class="font-semibold font-inter">
@@ -18,6 +22,7 @@ defineProps({
 				v-if="!(data instanceof Array) && typeof data === 'object'"
 				v-for="(value, key) in data"
 				class="mb-2"
+				tabindex="1"
 			>
 				<span v-if="value === null"
 					><span :class="handleClassForIndex(key)">{{ key }}</span
@@ -29,6 +34,7 @@ defineProps({
 					<JsonRenderer
 						:data="value"
 						class="border-l-[1px] pl-6 pt-1 border-gray"
+						aria-hidden="true"
 					/>
 				</span>
 				<span v-else-if="Array.isArray(value)">
@@ -38,6 +44,7 @@ defineProps({
 					<JsonRenderer
 						:data="value.slice(0, dataLoaded)"
 						class="border-l-[1px] pl-6 border-gray"
+						aria-hidden="true"
 					/>
 					<span class="text-brown ml-2">]</span>
 				</span>
@@ -58,6 +65,7 @@ defineProps({
 				v-else-if="data instanceof Array"
 				v-for="(item, index) in data.slice(0, dataLoaded)"
 				class="my-1"
+				tabindex="1"
 			>
 				<span class="text-gray mt-2">{{ index }}: </span>
 				<span v-if="!Array.isArray(item) && typeof item != 'object'">{{
@@ -67,6 +75,7 @@ defineProps({
 					v-else
 					:data="item"
 					class="border-l-[1px] pl-6 border-gray"
+					aria-hidden="true"
 				/>
 			</li>
 		</ul>
