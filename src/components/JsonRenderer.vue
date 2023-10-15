@@ -1,5 +1,15 @@
 <script setup lang="ts">
-import { handleClassForIndex } from '../utils/functions'
+import {
+	isNotObject,
+	isArray,
+	isObject,
+	isNull,
+	formatPropertyValue,
+} from '../utils/functions'
+
+import JsonNameRenderer from './JsonNameRenderer.vue'
+import PropertyRenderer from './PropertyRenderer.vue'
+import StringNumBooleanRenderer from './StringNumBooleanRenderer.vue'
 
 defineProps({
 	data: Object,
@@ -10,71 +20,52 @@ defineProps({
 
 <template>
 	<div>
-		<h1
-			class="text-[32px] mb-[10px] mt-6 font-bold"
-			v-if="jsonName"
-			tabindex="1"
-		>
-			{{ jsonName }}
-		</h1>
-		<ul class="font-semibold font-inter">
+		<JsonNameRenderer :name="jsonName" />
+		<ul class="font-inter font-semibold">
 			<li
-				v-if="!(data instanceof Array) && typeof data === 'object'"
-				v-for="(value, key) in data"
 				class="mb-2"
+				v-if="isObject(data)"
+				v-for="(value, key) in data"
 				tabindex="1"
 			>
-				<span v-if="value === null"
-					><span :class="handleClassForIndex(key)">{{ key }}</span
-					>: null</span
+				<span v-if="isNull(value)">
+					<PropertyRenderer :property="key" />
+					null</span
 				>
-				<span v-else-if="typeof value === 'object' && !Array.isArray(value)"
-					><span :class="handleClassForIndex(key)">{{ key }}</span
-					>:
+				<span v-else-if="isObject(value)">
+					<PropertyRenderer :property="key" />
 					<JsonRenderer
+						class="border-l-[1px] border-gray pl-6 pt-1"
 						:data="value"
-						class="border-l-[1px] pl-6 pt-1 border-gray"
 						aria-hidden="true"
 					/>
 				</span>
-				<span v-else-if="Array.isArray(value)">
-					<span :class="handleClassForIndex(key)">{{ key }}</span
-					>:
-					<span class="text-brown ml-2">[</span>
+				<span v-else-if="isArray(value)">
+					<PropertyRenderer :property="key" />
+					<span class="ml-2 text-brown">[</span>
 					<JsonRenderer
+						class="border-l-[1px] border-gray pl-6"
 						:data="value.slice(0, dataLoaded)"
-						class="border-l-[1px] pl-6 border-gray"
 						aria-hidden="true"
 					/>
-					<span class="text-brown ml-2">]</span>
+					<span class="ml-2 text-brown">]</span>
 				</span>
-				<span v-else-if="typeof value === 'string'">
-					<span :class="handleClassForIndex(key)">{{ key }}</span
-					>: "{{ value }}"
-				</span>
-				<span
-					v-else-if="
-						typeof value === 'number' || typeof value === 'boolean'
-					"
-				>
-					<span :class="handleClassForIndex(key)">{{ key }}</span
-					>: {{ value }}
-				</span>
+				<StringNumBooleanRenderer v-else :property="key" :pValue="value" />
 			</li>
 			<li
-				v-else-if="data instanceof Array"
-				v-for="(item, index) in data.slice(0, dataLoaded)"
 				class="my-1"
+				v-else-if="isArray(data)"
+				v-for="(item, index) in data?.slice(0, dataLoaded)"
 				tabindex="1"
 			>
-				<span class="text-gray mt-2">{{ index }}: </span>
-				<span v-if="!Array.isArray(item) && typeof item != 'object'">{{
-					typeof item === 'string' ? `"${item}"` : item
-				}}</span>
+				<PropertyRenderer :property="index" />
+				<span v-if="isNotObject(item)"
+					>{{ formatPropertyValue(item) }}
+				</span>
 				<JsonRenderer
+					class="border-l-[1px] border-gray pl-6"
 					v-else
 					:data="item"
-					class="border-l-[1px] pl-6 border-gray"
 					aria-hidden="true"
 				/>
 			</li>

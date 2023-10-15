@@ -1,4 +1,4 @@
-import { isJson } from '../utils/functions'
+import { isValidJson } from '../utils/functions'
 
 onmessage = (msg) => {
 	const file = msg.data
@@ -17,7 +17,7 @@ onmessage = (msg) => {
 		if (offset < file.size) {
 			readNextChunk()
 		} else {
-			const jsonIsValid = isJson(data)
+			const jsonIsValid = isValidJson(data)
 
 			if (jsonIsValid) {
 				postMessage(jsonIsValid)
