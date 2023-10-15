@@ -1,28 +1,28 @@
 {
-  "name": "rinha-frontend",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "vue-tsc && vite build",
-    "preview": "vite preview"
-  },
-  "dependencies": {
-    "vue": "^3.3.4"
-  },
-  "devDependencies": {
-    "@vitejs/plugin-vue": "^4.2.3",
-    "autoprefixer": "^10.4.16",
-    "install": "^0.13.0",
-    "npm": "^10.2.0",
-    "postcss": "^8.4.31",
-    "prettier": "^3.0.3",
-    "prettier-plugin-organize-attributes": "^1.0.0",
-    "prettier-plugin-tailwindcss": "^0.5.6",
-    "tailwindcss": "^3.3.3",
-    "typescript": "^5.0.2",
-    "vite": "^4.4.5",
-    "vue-tsc": "^1.8.5"
-  }
+	"name": "rinha-frontend",
+	"private": true,
+	"version": "0.0.0",
+	"type": "module",
+	"scripts": {
+		"dev": "vite",
+		"build": "vue-tsc && vite build",
+		"preview": "vite preview"
+	},
+	"dependencies": {
+		"vue": "^3.3.4"
+	},
+	"devDependencies": {
+		"@vitejs/plugin-vue": "^4.2.3",
+		"autoprefixer": "^10.4.16",
+		"install": "^0.13.0",
+		"npm": "^10.2.0",
+		"postcss": "^8.4.31",
+		"prettier": "^3.0.3",
+		"prettier-plugin-organize-attributes": "^1.0.0",
+		"prettier-plugin-tailwindcss": "^0.5.6",
+		"tailwindcss": "^3.3.3",
+		"typescript": "^5.0.2",
+		"vite": "^4.4.5",
+		"vue-tsc": "^1.8.5"
+	}
 }

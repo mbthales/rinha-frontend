@@ -8,7 +8,7 @@ html,
 body,
 #app,
 main {
-	@apply w-full h-full font-inter bg-white text-black;
+	@apply h-full w-full bg-white font-inter text-black;
 }
 
 .gradient-button {

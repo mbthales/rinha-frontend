@@ -5,6 +5,7 @@
 	"singleQuote": true,
 	"arrowParens": "always",
 	"plugins": [
-		"prettier-plugin-organize-attributes", "prettier-plugin-tailwindcss"
+		"prettier-plugin-organize-attributes",
+		"prettier-plugin-tailwindcss"
 	]
 }

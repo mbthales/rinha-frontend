@@ -2,9 +2,9 @@ import { isValidJson } from '../utils/functions'
 
 onmessage = (msg) => {
 	const file = msg.data
-	const chunkSize = 4500000
-	let offset = 0
+	const chunkSize = file.size / 100
 	let data = ''
+	let offset = 0
 
 	const reader = new FileReader()
 
