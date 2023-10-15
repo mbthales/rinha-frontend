@@ -1,5 +1,17 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+html,
+body,
+#app {
+	width: 100vw;
+	height: 100vh;
+	font-family: 'Inter', sans-serif;
+}
+
+.gradient-button {
+	background: linear-gradient(180deg, #e4e4e4 0%, #f7f7f7 100%);
+}

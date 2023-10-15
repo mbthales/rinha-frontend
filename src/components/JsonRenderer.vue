@@ -1,63 +1,48 @@
 <script setup lang="ts">
+import { handleClassForIndex } from '../utils/functions'
+
 defineProps({
-	json: Object,
+	data: Object,
 	jsonName: String,
 	dataLoaded: Number,
 })
 </script>
 
 <template>
-	<div class="ml-4">
-		<h1 class="text-6xl mb-2" v-if="jsonName">{{ jsonName }}</h1>
-		<ul class="font-semibold font-inter ml-6">
+	<div>
+		<h1 class="text-[32px] mb-[10px] mt-6 font-bold" v-if="jsonName">
+			{{ jsonName }}
+		</h1>
+		<ul class="font-semibold font-inter">
 			<li
-				v-if="!Array.isArray(json) && typeof json === 'object'"
-				v-for="(value, key) in json"
+				v-if="!(data instanceof Array) && typeof data === 'object'"
+				v-for="(value, key) in data"
+				class="mb-2"
 			>
 				<span v-if="value === null"
-					><span
-						:class="{
-							'text-blue-300': isNaN(key as unknown as number),
-							'text-gray-400': !isNaN(key as unknown as number),
-						}"
-						>{{ key }}</span
+					><span :class="handleClassForIndex(key)">{{ key }}</span
 					>: null</span
 				>
 				<span v-else-if="typeof value === 'object' && !Array.isArray(value)"
-					><span
-						:class="{
-							'text-blue-300': isNaN(key as unknown as number),
-							'text-gray-400': !isNaN(key as unknown as number),
-						}"
-						>{{ key }}</span
+					><span :class="handleClassForIndex(key)">{{ key }}</span
 					>:
 					<JsonRenderer
-						:json="value"
-						class="border-l-[1px] border-[#BFBFBF]"
+						:data="value"
+						class="border-l-[1px] pl-6 pt-1 border-gray"
 					/>
 				</span>
 				<span v-else-if="Array.isArray(value)">
-					<span
-						:class="{
-							'text-blue-300': isNaN(key as unknown as number),
-							'text-gray-400': !isNaN(key as unknown as number),
-						}"
-						>{{ key }}</span
+					<span :class="handleClassForIndex(key)">{{ key }}</span
 					>:
-					<span class="text-[#F2CAB8] ml-2">[</span>
+					<span class="text-brown ml-2">[</span>
 					<JsonRenderer
-						:json="value.slice(0, dataLoaded)"
-						class="border-l-[1px] border-[#BFBFBF]"
+						:data="value.slice(0, dataLoaded)"
+						class="border-l-[1px] pl-6 border-gray"
 					/>
-					<span class="text-[#F2CAB8] ml-2">]</span>
+					<span class="text-brown ml-2">]</span>
 				</span>
 				<span v-else-if="typeof value === 'string'">
-					<span
-						:class="{
-							'text-blue-300': isNaN(key as unknown as number),
-							'text-gray-400': !isNaN(key as unknown as number),
-						}"
-						>{{ key }}</span
+					<span :class="handleClassForIndex(key)">{{ key }}</span
 					>: "{{ value }}"
 				</span>
 				<span
@@ -65,27 +50,23 @@ defineProps({
 						typeof value === 'number' || typeof value === 'boolean'
 					"
 				>
-					<span
-						:class="{
-							'text-blue-300': isNaN(key as unknown as number),
-							'text-gray-400': !isNaN(key as unknown as number),
-						}"
-						>{{ key }}</span
+					<span :class="handleClassForIndex(key)">{{ key }}</span
 					>: {{ value }}
 				</span>
 			</li>
 			<li
-				v-else-if="Array.isArray(json)"
-				v-for="(item, index) in json.slice(0, dataLoaded)"
+				v-else-if="data instanceof Array"
+				v-for="(item, index) in data.slice(0, dataLoaded)"
+				class="my-1"
 			>
-				<span class="text-gray-400">{{ index }}: </span>
+				<span class="text-gray mt-2">{{ index }}: </span>
 				<span v-if="!Array.isArray(item) && typeof item != 'object'">{{
-					item
+					typeof item === 'string' ? `"${item}"` : item
 				}}</span>
 				<JsonRenderer
 					v-else
-					:json="item"
-					class="border-l-[1px] border-[#BFBFBF]"
+					:data="item"
+					class="border-l-[1px] pl-6 border-gray"
 				/>
 			</li>
 		</ul>

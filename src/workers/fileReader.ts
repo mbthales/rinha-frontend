@@ -1,11 +1,4 @@
-const isJson = (item: string) => {
-	try {
-		const test = JSON.parse(item)
-		return test
-	} catch (e) {
-		return false
-	}
-}
+import { isJson } from '../utils/functions'
 
 onmessage = (msg) => {
 	const file = msg.data
@@ -25,7 +18,6 @@ onmessage = (msg) => {
 			readNextChunk()
 		} else {
 			const jsonIsValid = isJson(data)
-			console.log(jsonIsValid)
 
 			if (jsonIsValid) {
 				postMessage(jsonIsValid)
