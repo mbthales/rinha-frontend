@@ -8,11 +8,9 @@ import {
 } from './utils/functions'
 
 import JsonRenderer from './components/JsonRenderer.vue'
+import fileReader from './workers/fileReader.ts?worker'
 
-const workerUrl = new URL('./workers/fileReader.ts', import.meta.url)
-const worker = new Worker(workerUrl, {
-	type: 'module',
-})
+const worker = new fileReader()
 
 const jsonData = ref<Array<Object> | Object | null>(null)
 const jsonName = ref('')
