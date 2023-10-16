@@ -1,4 +1,13 @@
-import type { Ref } from 'vue'
+import type {
+	HandleUploadedFileI,
+	HandleWorkerMessageI,
+	HandleJsonArrayI,
+	HandleJsonObjectI,
+	HandleJsonDataI,
+} from '../types/utilFunctions'
+
+let arrayTemp: any[] = []
+let objectTemp: Record<string, any> = {}
 
 export const handleClassForProperty = (property: string | number) => {
 	if (typeof property === 'string') {
@@ -17,24 +26,21 @@ export const isValidJson = (item: string) => {
 	}
 }
 
-export const handleLoadMoreData = (dataLoaded: Ref<number>) => {
+export const handleLoadMoreData = (worker: Worker) => {
 	window.addEventListener('scroll', () => {
 		const scrollY = window.scrollY
 		const windowHeight = window.innerHeight
 		const documentHeight = document.documentElement.scrollHeight
 
-		if (scrollY + windowHeight >= documentHeight - 200) {
-			dataLoaded.value += 5
+		if (scrollY + windowHeight >= documentHeight - 300) {
+			worker.postMessage('')
 		}
 	})
 }
 
-export const handleWorkerMessage = (
-	msg: MessageEvent<any>,
-	fileError: Ref<string>,
-	jsonData: Ref<Array<Object> | Object | null>,
-	loading: Ref<boolean>
-) => {
+export const handleWorkerMessage = (args: HandleWorkerMessageI) => {
+	const { msg, fileError, jsonData, loading } = args
+
 	if (msg.data === 'error') {
 		fileError.value = 'Invalid file. Please load a JSON file.'
 	} else {
@@ -44,13 +50,9 @@ export const handleWorkerMessage = (
 	loading.value = false
 }
 
-export const handleUploadedFile = (
-	worker: Worker,
-	e: Event,
-	fileError: Ref<string>,
-	jsonName: Ref<string>,
-	loading: Ref<boolean>
-) => {
+export const handleUploadedFile = (args: HandleUploadedFileI) => {
+	const { worker, e, fileError, jsonName, loading } = args
+
 	const target = e.target as HTMLInputElement
 	const files = target.files
 	fileError.value = ''
@@ -66,8 +68,57 @@ export const handleUploadedFile = (
 		jsonName.value = file.name
 
 		loading.value = true
-		console.time('JsonRenderer')
 		worker.postMessage(file)
+		console.time('JsonRenderer')
+	}
+}
+
+export function handleJsonArray(args: HandleJsonArrayI) {
+	const { data, arrayTemp, loadedData, maxDataToLoad } = args
+
+	arrayTemp.push(...data.slice(loadedData, loadedData + maxDataToLoad))
+
+	return arrayTemp
+}
+
+export function handleJsonObject(args: HandleJsonObjectI) {
+	const { data, objectTemp, loadedData, maxDataToLoad } = args
+
+	for (const key in data) {
+		if (Array.isArray(data[key])) {
+			objectTemp[key] = [
+				...(objectTemp[key] || []),
+				...data[key].slice(loadedData, loadedData + maxDataToLoad),
+			]
+		} else {
+			objectTemp[key] = data[key]
+		}
+	}
+
+	return objectTemp
+}
+
+export const handleJsonData = (args: HandleJsonDataI) => {
+	const { jsonData, loadedData, maxDataToLoad } = args
+
+	if (isArray(jsonData)) {
+		arrayTemp = handleJsonArray({
+			data: jsonData,
+			arrayTemp,
+			loadedData,
+			maxDataToLoad,
+		})
+
+		postMessage(arrayTemp)
+	} else if (isObject(jsonData)) {
+		objectTemp = handleJsonObject({
+			data: jsonData,
+			objectTemp,
+			loadedData,
+			maxDataToLoad,
+		})
+
+		postMessage(objectTemp)
 	}
 }
 

@@ -1,36 +1,33 @@
-import { isValidJson } from '../utils/functions'
+import { isValidJson, handleJsonData } from '../utils/functions'
+
+let jsonData: any[] | Record<string, any> | null = null
+let loadedData = 0
+const maxDataToLoad = 5
 
 onmessage = (msg) => {
 	const file = msg.data
-	const chunkSize = file.size / 100
-	let data = ''
-	let offset = 0
 
-	const reader = new FileReader()
+	if (jsonData !== null) {
+		handleJsonData({ jsonData, loadedData, maxDataToLoad })
 
-	reader.onload = (evt) => {
-		const readerResult = evt.target?.result as string
+		loadedData += maxDataToLoad
+	} else {
+		const reader = new FileReader()
 
-		data += readerResult
-		offset += chunkSize
+		reader.onload = (evt) => {
+			const readerResult = evt.target?.result as string
+			const data = readerResult
 
-		if (offset < file.size) {
-			readNextChunk()
-		} else {
-			const jsonIsValid = isValidJson(data)
+			jsonData = isValidJson(data)
 
-			if (jsonIsValid) {
-				postMessage(jsonIsValid)
+			if (jsonData) {
+				handleJsonData({ jsonData, loadedData, maxDataToLoad })
+
+				loadedData += maxDataToLoad
 			} else {
 				postMessage('error')
 			}
 		}
+		reader.readAsText(file)
 	}
-
-	const readNextChunk = () => {
-		const blob = file.slice(offset, offset + chunkSize)
-		reader.readAsText(blob)
-	}
-
-	readNextChunk()
 }

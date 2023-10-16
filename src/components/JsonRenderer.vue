@@ -45,7 +45,7 @@ defineProps({
 					<span class="ml-2 text-brown">[</span>
 					<JsonRenderer
 						class="border-l-[1px] border-gray pl-6"
-						:data="value.slice(0, dataLoaded)"
+						:data="value"
 						aria-hidden="true"
 					/>
 					<span class="ml-2 text-brown">]</span>
@@ -55,7 +55,7 @@ defineProps({
 			<li
 				class="my-1"
 				v-else-if="isArray(data)"
-				v-for="(item, index) in data?.slice(0, dataLoaded)"
+				v-for="(item, index) in data"
 				tabindex="1"
 			>
 				<PropertyRenderer :property="index" />
